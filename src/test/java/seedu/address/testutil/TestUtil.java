@@ -334,6 +334,10 @@ public class TestUtil {
         return card.isSamePerson(person);
     }
 
+    public static String getTagAsString(String tagName) {
+        return "[" + tagName + "]";
+    }
+
     public static Tag[] getTagList(String tags) {
         if ("".equals(tags)) {
             return new Tag[]{};
