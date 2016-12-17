@@ -17,7 +17,11 @@ public class HelpWindowHandle extends GuiHandle {
     }
 
     public boolean isWindowOpen() {
-        return getNode(HELP_WINDOW_ROOT_FIELD_ID) != null;
+        try {
+            return getNode(HELP_WINDOW_ROOT_FIELD_ID) != null;
+        } catch (IllegalStateException ise) {
+            return false;
+        }
     }
 
     public void closeWindow() {
