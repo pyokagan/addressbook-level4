@@ -25,6 +25,12 @@ public class MainGuiHandle extends GuiHandle {
         return new CommandBoxHandle(guiRobot, primaryStage, TestApp.APP_TITLE);
     }
 
+    public StatusBarFooterHandle getStatusBarFooter() {
+        StatusBarFooterHandle statusBarFooter = new StatusBarFooterHandle(guiRobot, primaryStage);
+        statusBarFooter.setLastSyncStatus(statusBarFooter.getSyncStatus());
+        return statusBarFooter;
+    }
+
     public MainMenuHandle getMainMenu() {
         return new MainMenuHandle(guiRobot, primaryStage);
     }

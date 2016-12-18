@@ -45,6 +45,7 @@ public abstract class AddressBookGuiTest {
     protected ResultDisplayHandle resultDisplay;
     protected CommandBoxHandle commandBox;
     protected BrowserPanelHandle browserPanel;
+    protected StatusBarFooterHandle statusBarFooter;
     private Stage stage;
 
     @BeforeClass
@@ -59,6 +60,8 @@ public abstract class AddressBookGuiTest {
 
     @Before
     public void setup() throws Exception {
+        EventsCenter.clearSubscribers();
+        testApp = (TestApp) FxToolkit.setupApplication(() -> new TestApp(this::getInitialData, getDataFileLocation()));
         FxToolkit.setupStage((stage) -> {
             mainGui = new MainGuiHandle(new GuiRobot(), stage);
             mainMenu = mainGui.getMainMenu();
@@ -66,10 +69,9 @@ public abstract class AddressBookGuiTest {
             resultDisplay = mainGui.getResultDisplay();
             commandBox = mainGui.getCommandBox();
             browserPanel = mainGui.getBrowserPanel();
+            statusBarFooter = mainGui.getStatusBarFooter();
             this.stage = stage;
         });
-        EventsCenter.clearSubscribers();
-        testApp = (TestApp) FxToolkit.setupApplication(() -> new TestApp(this::getInitialData, getDataFileLocation()));
         FxToolkit.showStage();
         while (!stage.isShowing());
         mainGui.focusOnMainApp();
@@ -117,6 +119,25 @@ public abstract class AddressBookGuiTest {
      */
     protected void assertResultMessage(String expected) {
         assertEquals(expected, resultDisplay.getText());
+    }
+
+    /**
+     * Asserts whether the sync status text shown in the Status Bar has been been updated
+     * or not is the same as the given boolean.
+     * @param expected true if the sync status text should be updated, false otherwise.
+     */
+    protected void assertSyncStatusUpdated(boolean expected) {
+        String lastSyncStatus = statusBarFooter.getLastSyncStatus();
+        String currentSyncStatus = statusBarFooter.getSyncStatus();
+        boolean updated = !currentSyncStatus.equals(lastSyncStatus);
+        assertTrue(updated == expected);
+    }
+
+    /**
+     * Asserts the save location shown in the Status Bar is the same as the given string.
+     */
+    protected void assertSaveLocation(String expected) {
+        assertEquals(statusBarFooter.getSaveLocation(), expected);
     }
 
     public void raise(BaseEvent e) {
