@@ -29,6 +29,10 @@ public class StorageManager extends ComponentManager implements Storage {
         this.userPrefsStorage = userPrefsStorage;
     }
 
+    public StorageManager(String userPrefsFilePath) {
+        this(null, new JsonUserPrefsStorage(userPrefsFilePath));
+    }
+
     public StorageManager(String addressBookFilePath, String userPrefsFilePath) {
         this(new XmlAddressBookStorage(addressBookFilePath), new JsonUserPrefsStorage(userPrefsFilePath));
     }
@@ -51,6 +55,11 @@ public class StorageManager extends ComponentManager implements Storage {
     @Override
     public String getAddressBookFilePath() {
         return addressBookStorage.getAddressBookFilePath();
+    }
+
+    @Override
+    public void setAddressBookFilePath(String addressBookFilePath) {
+        this.addressBookStorage = new XmlAddressBookStorage(addressBookFilePath);
     }
 
     @Override

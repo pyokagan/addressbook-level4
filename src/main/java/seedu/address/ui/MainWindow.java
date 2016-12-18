@@ -78,7 +78,7 @@ public class MainWindow extends UiPart {
 
     public static MainWindow load(Stage primaryStage, Config config, UserPrefs prefs, Logic logic) {
         MainWindow mainWindow = UiPartLoader.loadUiPart(new MainWindow());
-        mainWindow.configure(primaryStage, config.getAppTitle(), config.getAddressBookName(), config, prefs, logic);
+        mainWindow.configure(primaryStage, config.getAppTitle(), prefs.getAddressBookName(), config, prefs, logic);
         return mainWindow;
     }
 
@@ -111,7 +111,7 @@ public class MainWindow extends UiPart {
         browserPanel = BrowserPanel.load(browserPlaceholder);
         personListPanel = PersonListPanel.load(getPersonListPlaceholder(), logic.getFilteredPersonList());
         resultDisplay = ResultDisplay.load(getResultDisplayPlaceholder());
-        statusBarFooter = StatusBarFooter.load(getStatusbarPlaceholder(), config.getAddressBookFilePath());
+        statusBarFooter = StatusBarFooter.load(getStatusbarPlaceholder(), userPrefs.getAddressBookFilePath());
         commandBox = CommandBox.load(getCommandBoxPlaceholder(), logic);
     }
 
