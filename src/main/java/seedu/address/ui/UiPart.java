@@ -12,11 +12,11 @@ import seedu.address.commons.core.EventsCenter;
 import seedu.address.commons.events.BaseEvent;
 
 /**
- * Base class for UI parts.
- * A 'UI part' represents a distinct part of the UI. e.g. Windows, dialogs, panels, status bars, etc.
+ * Represents a distinct part of the UI.
+ * e.g. Windows, dialogs, panels, status bars, etc.
  * It contains a scene graph with a root node of type {@code T}.
  */
-public abstract class UiPart<T> {
+public class UiPart<T> {
 
     /** Resource folder where FXML files are stored. */
     public static final String FXML_FILE_FOLDER = "/view/";
@@ -43,7 +43,7 @@ public abstract class UiPart<T> {
      * @see #UiPart(URL)
      */
     public UiPart(String fxmlFileName) {
-        this(MainApp.class.getResource(FXML_FILE_FOLDER + fxmlFileName));
+        this(fxmlFileName != null ? MainApp.class.getResource(FXML_FILE_FOLDER + fxmlFileName) : null);
     }
 
     /**
