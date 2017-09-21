@@ -2,9 +2,7 @@ build/
 .gradle/
 .checkstyle
 .settings/
-.idea/
 lib/*
-*.iml
 *.log
 *.log.*
 *.csv
@@ -18,3 +16,7 @@ classes/
 /bin/
 src/main/resources/docs/
 out/
+/.idea/workspace.xml
+/.idea/gradle.xml
+/.idea/tasks.xml
+/.idea/libraries/
