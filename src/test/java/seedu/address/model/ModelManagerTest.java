@@ -1,19 +1,24 @@
 package seedu.address.model;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 import static seedu.address.testutil.TypicalPersons.ALICE;
 import static seedu.address.testutil.TypicalPersons.BENSON;
+import static seedu.address.testutil.TypicalPersons.BOB;
 
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.function.Predicate;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import seedu.address.commons.core.Version;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
+import seedu.address.model.person.Person;
 import seedu.address.testutil.AddressBookBuilder;
 
 public class ModelManagerTest {
@@ -37,6 +42,29 @@ public class ModelManagerTest {
     public void hasPerson_personInAddressBook_returnsTrue() {
         modelManager.addPerson(ALICE);
         assertTrue(modelManager.hasPerson(ALICE));
+    }
+
+    @Test
+    public void addPerson_personNotInAddressBook_personAddedToAddressBook() {
+        modelManager.addPerson(ALICE);
+        AddressBook expectedAddressBook = new AddressBookBuilder().withPerson(ALICE).build();
+        assertEquals(expectedAddressBook, new AddressBook(modelManager.getAddressBook()));
+    }
+
+    @Test
+    public void addPerson_filterSetToSpecificFilter_filterNotModified() {
+        modelManager.addPerson(ALICE);
+
+        // Show only ALICE in model
+        Predicate<Person> alicePredicate = ALICE::equals;
+        modelManager.setPersonListFilter(alicePredicate);
+        assertEquals(Arrays.asList(ALICE), modelManager.getFilteredPersonList());
+
+        modelManager.addPerson(BOB);
+        AddressBook expectedAddressBook = new AddressBookBuilder().withPerson(ALICE).withPerson(BOB).build();
+        assertEquals(expectedAddressBook, new AddressBook(modelManager.getAddressBook()));
+        assertEquals(Arrays.asList(ALICE), modelManager.getFilteredPersonList());
+        assertEquals(alicePredicate, modelManager.getPersonListFilter());
     }
 
     @Test

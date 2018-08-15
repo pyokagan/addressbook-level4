@@ -46,6 +46,11 @@ public interface Model {
     ObservableList<Person> getFilteredPersonList();
 
     /**
+     * Returns the filter of the filtered person list.
+     */
+    Predicate<Person> getPersonListFilter();
+
+    /**
      * Sets the filter of the filtered person list to filter by the given {@code predicate}.
      */
     void setPersonListFilter(Predicate<Person> predicate);

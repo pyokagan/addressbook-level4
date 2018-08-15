@@ -6,6 +6,7 @@ import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -21,6 +22,7 @@ public class ModelManager extends ComponentManager implements Model {
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
 
     private final VersionedAddressBook versionedAddressBook;
+    private final SimpleObjectProperty<Predicate<Person>> personListFilter;
     private final FilteredList<Person> filteredPersons;
 
     /**
@@ -33,7 +35,9 @@ public class ModelManager extends ComponentManager implements Model {
         logger.fine("Initializing with address book: " + addressBook + " and user prefs " + userPrefs);
 
         versionedAddressBook = new VersionedAddressBook(addressBook);
+        personListFilter = new SimpleObjectProperty<>(PREDICATE_SHOW_ALL_PERSONS);
         filteredPersons = new FilteredList<>(versionedAddressBook.getPersonList());
+        filteredPersons.predicateProperty().bind(personListFilter);
     }
 
     public ModelManager() {
@@ -71,7 +75,6 @@ public class ModelManager extends ComponentManager implements Model {
     @Override
     public void addPerson(Person person) {
         versionedAddressBook.addPerson(person);
-        setPersonListFilter(PREDICATE_SHOW_ALL_PERSONS);
         indicateAddressBookChanged();
     }
 
@@ -95,9 +98,14 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
+    public Predicate<Person> getPersonListFilter() {
+        return personListFilter.get();
+    }
+
+    @Override
     public void setPersonListFilter(Predicate<Person> predicate) {
         requireNonNull(predicate);
-        filteredPersons.setPredicate(predicate);
+        personListFilter.set(predicate);
     }
 
     //=========== Undo/Redo =================================================================================
