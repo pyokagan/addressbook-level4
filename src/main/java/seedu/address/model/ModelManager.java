@@ -71,7 +71,7 @@ public class ModelManager extends ComponentManager implements Model {
     @Override
     public void addPerson(Person person) {
         versionedAddressBook.addPerson(person);
-        updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        setPersonListFilter(PREDICATE_SHOW_ALL_PERSONS);
         indicateAddressBookChanged();
     }
 
@@ -95,7 +95,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public void updateFilteredPersonList(Predicate<Person> predicate) {
+    public void setPersonListFilter(Predicate<Person> predicate) {
         requireNonNull(predicate);
         filteredPersons.setPredicate(predicate);
     }
