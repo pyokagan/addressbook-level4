@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import java.util.List;
 
 import javafx.collections.ObservableList;
+import seedu.address.commons.util.ObservableSortedSetList;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.UniquePersonList;
 
@@ -14,18 +15,9 @@ import seedu.address.model.person.UniquePersonList;
  */
 public class AddressBook implements ReadOnlyAddressBook {
 
-    private final UniquePersonList persons;
-
-    /*
-     * The 'unusual' code block below is an non-static initialization block, sometimes used to avoid duplication
-     * between constructors. See https://docs.oracle.com/javase/tutorial/java/javaOO/initial.html
-     *
-     * Note that non-static init blocks are not recommended to use. There are other ways to avoid duplication
-     *   among constructors.
-     */
-    {
-        persons = new UniquePersonList();
-    }
+    private final UniquePersonList persons = new UniquePersonList();
+    private final ObservableSortedSetList<Person> lol =
+            new ObservableSortedSetList<>(persons.asUnmodifiableObservableSet(), AddressBook::comparePerson);
 
     public AddressBook() {}
 
@@ -97,13 +89,13 @@ public class AddressBook implements ReadOnlyAddressBook {
 
     @Override
     public String toString() {
-        return persons.asUnmodifiableObservableList().size() + " persons";
+        return persons.asUnmodifiableObservableSet().size() + " persons";
         // TODO: refine later
     }
 
     @Override
     public ObservableList<Person> getPersonList() {
-        return persons.asUnmodifiableObservableList();
+        return lol;
     }
 
     @Override
@@ -116,5 +108,23 @@ public class AddressBook implements ReadOnlyAddressBook {
     @Override
     public int hashCode() {
         return persons.hashCode();
+    }
+
+    /**
+     */
+    private static int comparePerson(Person a, Person b) {
+        if (!a.getName().equals(b.getName())) {
+            return a.getName().fullName.compareTo(b.getName().fullName);
+        }
+
+        if (!a.getPhone().equals(b.getPhone())) {
+            return a.getPhone().value.compareTo(b.getPhone().value);
+        }
+
+        if (!b.getEmail().equals(b.getEmail())) {
+            return a.getEmail().value.compareTo(b.getEmail().value);
+        }
+
+        return a.getAddress().value.compareTo(b.getAddress().value);
     }
 }

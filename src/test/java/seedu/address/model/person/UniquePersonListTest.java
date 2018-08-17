@@ -179,7 +179,8 @@ public class UniquePersonListTest {
 
     @Test
     public void asUnmodifiableObservableList_modifyList_throwsUnsupportedOperationException() {
+        uniquePersonList.add(ALICE);
         thrown.expect(UnsupportedOperationException.class);
-        uniquePersonList.asUnmodifiableObservableList().remove(0);
+        uniquePersonList.asUnmodifiableObservableSet().remove(ALICE);
     }
 }
