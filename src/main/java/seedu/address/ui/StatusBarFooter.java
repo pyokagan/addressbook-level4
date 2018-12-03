@@ -4,16 +4,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Clock;
 import java.util.Date;
-import java.util.logging.Logger;
 
-import com.google.common.eventbus.Subscribe;
-
-import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
-import seedu.address.commons.core.LogsCenter;
-import seedu.address.commons.events.model.AddressBookChangedEvent;
+import seedu.address.model.person.Person;
 
 /**
  * A ui for the status bar that is displayed at the footer of the application.
@@ -33,8 +30,6 @@ public class StatusBarFooter extends UiPart<Region> {
      */
     private static Clock clock = Clock.systemDefaultZone();
 
-    private static final Logger logger = LogsCenter.getLogger(StatusBarFooter.class);
-
     private static final String FXML = "StatusBarFooter.fxml";
 
     @FXML
@@ -43,11 +38,15 @@ public class StatusBarFooter extends UiPart<Region> {
     private Label saveLocationStatus;
 
 
-    public StatusBarFooter(Path saveLocation) {
+    public StatusBarFooter(Path saveLocation, ObservableList<Person> persons) {
         super(FXML);
-        setSyncStatus(SYNC_STATUS_INITIAL);
-        setSaveLocation(Paths.get(".").resolve(saveLocation).toString());
-        registerAsAnEventHandler(this);
+        persons.addListener((ListChangeListener.Change<? extends Person> change) -> {
+            long now = clock.millis();
+            String lastUpdated = new Date(now).toString();
+            syncStatus.setText(String.format(SYNC_STATUS_UPDATED, lastUpdated));
+        });
+        syncStatus.setText(SYNC_STATUS_INITIAL);
+        saveLocationStatus.setText(Paths.get(".").resolve(saveLocation).toString());
     }
 
     /**
@@ -64,19 +63,4 @@ public class StatusBarFooter extends UiPart<Region> {
         return clock;
     }
 
-    private void setSaveLocation(String location) {
-        Platform.runLater(() -> saveLocationStatus.setText(location));
-    }
-
-    private void setSyncStatus(String status) {
-        Platform.runLater(() -> syncStatus.setText(status));
-    }
-
-    @Subscribe
-    public void handleAddressBookChangedEvent(AddressBookChangedEvent abce) {
-        long now = clock.millis();
-        String lastUpdated = new Date(now).toString();
-        logger.info(LogsCenter.getEventHandlingLogMessage(abce, "Setting last updated status to " + lastUpdated));
-        setSyncStatus(String.format(SYNC_STATUS_UPDATED, lastUpdated));
-    }
 }

@@ -49,7 +49,7 @@ public class ClearCommandSystemTest extends AddressBookSystemTest {
         assertSelectedCardUnchanged();
 
         /* Case: clear empty address book -> cleared */
-        assertCommandSuccess(ClearCommand.COMMAND_WORD);
+        assertCommandSuccess(ClearCommand.COMMAND_WORD, ClearCommand.MESSAGE_SUCCESS, new ModelManager(), false);
         assertSelectedCardUnchanged();
 
         /* Case: mixed case command word -> rejected */
@@ -74,10 +74,23 @@ public class ClearCommandSystemTest extends AddressBookSystemTest {
      * @see ClearCommandSystemTest#assertCommandSuccess(String)
      */
     private void assertCommandSuccess(String command, String expectedResultMessage, Model expectedModel) {
+        assertCommandSuccess(command, expectedResultMessage, expectedModel, true);
+    }
+
+    /**
+     * Performs the same verification as {@code assertCommandSuccess(String)} except that you can choose whether
+     * the sync status changed or not.
+     */
+    private void assertCommandSuccess(String command, String expectedResultMessage, Model expectedModel,
+            boolean syncStatusChanged) {
         executeCommand(command);
         assertApplicationDisplaysExpected("", expectedResultMessage, expectedModel);
         assertCommandBoxShowsDefaultStyle();
-        assertStatusBarUnchangedExceptSyncStatus();
+        if (syncStatusChanged) {
+            assertStatusBarUnchangedExceptSyncStatus();
+        } else {
+            assertStatusBarUnchanged();
+        }
     }
 
     /**
