@@ -4,14 +4,18 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.commons.util.CollectionUtil.requireAllNonNull;
 
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 
+import javafx.beans.property.ReadOnlyProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import seedu.address.commons.core.ComponentManager;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.commons.core.index.Index;
 import seedu.address.commons.events.model.AddressBookChangedEvent;
 import seedu.address.model.person.Person;
 
@@ -24,6 +28,7 @@ public class ModelManager extends ComponentManager implements Model {
     private final VersionedAddressBook versionedAddressBook;
     private final UserPrefs userPrefs;
     private final FilteredList<Person> filteredPersons;
+    private final SimpleObjectProperty<Index> selectedPersonIndex = new SimpleObjectProperty<>();
 
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
@@ -169,6 +174,23 @@ public class ModelManager extends ComponentManager implements Model {
         versionedAddressBook.commit();
     }
 
+    //=========== Selected person index =====================================================================
+
+    @Override
+    public ReadOnlyProperty<Index> selectedPersonIndexProperty() {
+        return selectedPersonIndex;
+    }
+
+    @Override
+    public Index getSelectedPersonIndex() {
+        return selectedPersonIndex.getValue();
+    }
+
+    @Override
+    public void setSelectedPersonIndex(Index index) {
+        selectedPersonIndex.set(index);
+    }
+
     @Override
     public boolean equals(Object obj) {
         // short circuit if same object
@@ -185,7 +207,8 @@ public class ModelManager extends ComponentManager implements Model {
         ModelManager other = (ModelManager) obj;
         return versionedAddressBook.equals(other.versionedAddressBook)
                 && userPrefs.equals(other.userPrefs)
-                && filteredPersons.equals(other.filteredPersons);
+                && filteredPersons.equals(other.filteredPersons)
+                && Objects.equals(selectedPersonIndex.get(), other.selectedPersonIndex.get());
     }
 
 }

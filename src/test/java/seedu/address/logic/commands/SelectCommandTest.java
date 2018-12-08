@@ -1,6 +1,5 @@
 package seedu.address.logic.commands;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.assertCommandFailure;
@@ -16,7 +15,6 @@ import org.junit.Test;
 
 import seedu.address.commons.core.Messages;
 import seedu.address.commons.core.index.Index;
-import seedu.address.commons.events.ui.JumpToListRequestEvent;
 import seedu.address.logic.CommandHistory;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
@@ -99,11 +97,9 @@ public class SelectCommandTest {
     private void assertExecutionSuccess(Index index) {
         SelectCommand selectCommand = new SelectCommand(index);
         String expectedMessage = String.format(SelectCommand.MESSAGE_SELECT_PERSON_SUCCESS, index.getOneBased());
+        expectedModel.setSelectedPersonIndex(index);
 
         assertCommandSuccess(selectCommand, model, commandHistory, expectedMessage, expectedModel);
-
-        JumpToListRequestEvent lastEvent = (JumpToListRequestEvent) eventsCollectorRule.eventsCollector.getMostRecent();
-        assertEquals(index, Index.fromZeroBased(lastEvent.targetIndex));
     }
 
     /**
@@ -113,6 +109,5 @@ public class SelectCommandTest {
     private void assertExecutionFailure(Index index, String expectedMessage) {
         SelectCommand selectCommand = new SelectCommand(index);
         assertCommandFailure(selectCommand, model, commandHistory, expectedMessage);
-        assertTrue(eventsCollectorRule.eventsCollector.isEmpty());
     }
 }

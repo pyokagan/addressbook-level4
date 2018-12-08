@@ -2,8 +2,10 @@ package seedu.address.logic;
 
 import java.nio.file.Path;
 
+import javafx.beans.property.ReadOnlyProperty;
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
+import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.CommandResult;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -50,4 +52,18 @@ public interface Logic {
      * Set the user prefs' GUI settings.
      */
     void setGuiSettings(GuiSettings guiSettings);
+
+    /**
+     * Returns the index of the selected person in the filtered person list.
+     *
+     * @see seedu.address.model.Model#selectedPersonIndexProperty()
+     */
+    ReadOnlyProperty<Index> selectedPersonIndexProperty();
+
+    /**
+     * Sets the index of the selected person in the filtered person list.
+     *
+     * @see seedu.address.model.Model#setSelectedPersonIndex(Index)
+     */
+    void setSelectedPersonIndex(Index index);
 }

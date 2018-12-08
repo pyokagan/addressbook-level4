@@ -14,8 +14,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import javafx.beans.property.ReadOnlyProperty;
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
+import seedu.address.commons.core.index.Index;
 import seedu.address.logic.CommandHistory;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.AddressBook;
@@ -183,6 +185,21 @@ public class AddCommandTest {
 
         @Override
         public void commitAddressBook() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public ReadOnlyProperty<Index> selectedPersonIndexProperty() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public Index getSelectedPersonIndex() {
+            throw new AssertionError("This method should not be called.");
+        }
+
+        @Override
+        public void setSelectedPersonIndex(Index index) {
             throw new AssertionError("This method should not be called.");
         }
     }

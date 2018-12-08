@@ -1,18 +1,16 @@
 package seedu.address.ui;
 
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
-import com.google.common.eventbus.Subscribe;
-
-import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Region;
 import seedu.address.commons.core.LogsCenter;
-import seedu.address.commons.events.ui.JumpToListRequestEvent;
-import seedu.address.commons.events.ui.PersonPanelSelectionChangedEvent;
+import seedu.address.commons.core.index.Index;
 import seedu.address.model.person.Person;
 
 /**
@@ -25,42 +23,32 @@ public class PersonListPanel extends UiPart<Region> {
     @FXML
     private ListView<Person> personListView;
 
-    public PersonListPanel(ObservableList<Person> personList) {
+    public PersonListPanel(ObservableList<Person> personList, ObservableValue<Index> selectedIndex,
+            Consumer<Index> onSelectedIndexChange) {
         super(FXML);
-        setConnections(personList);
-        registerAsAnEventHandler(this);
-    }
-
-    private void setConnections(ObservableList<Person> personList) {
         personListView.setItems(personList);
         personListView.setCellFactory(listView -> new PersonListViewCell());
-        setEventHandlerForSelectionChangeEvent();
-    }
+        personListView.getSelectionModel().selectedIndexProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null || newValue.intValue() < 0) {
+                onSelectedIndexChange.accept(null);
+                return;
+            }
 
-    private void setEventHandlerForSelectionChangeEvent() {
-        personListView.getSelectionModel().selectedItemProperty()
-                .addListener((observable, oldValue, newValue) -> {
-                    if (newValue != null) {
-                        logger.fine("Selection in person list panel changed to : '" + newValue + "'");
-                        raise(new PersonPanelSelectionChangedEvent(newValue));
-                    }
-                });
-    }
-
-    /**
-     * Scrolls to the {@code PersonCard} at the {@code index} and selects it.
-     */
-    private void scrollTo(int index) {
-        Platform.runLater(() -> {
-            personListView.scrollTo(index);
-            personListView.getSelectionModel().clearAndSelect(index);
+            logger.fine("Selection in person list panel changed to : '" + newValue + "'");
+            onSelectedIndexChange.accept(Index.fromZeroBased(newValue.intValue()));
         });
-    }
+        selectedIndex.addListener((observable, oldValue, newValue) -> {
+            int expectedIndex = newValue == null ? -1 : newValue.getZeroBased();
+            if (personListView.getSelectionModel().getSelectedIndex() == expectedIndex) {
+                return;
+            }
 
-    @Subscribe
-    private void handleJumpToListRequestEvent(JumpToListRequestEvent event) {
-        logger.info(LogsCenter.getEventHandlingLogMessage(event));
-        scrollTo(event.targetIndex);
+            personListView.getSelectionModel().clearSelection();
+            if (newValue != null) {
+                personListView.scrollTo(newValue.getZeroBased());
+                personListView.getSelectionModel().select(newValue.getZeroBased());
+            }
+        });
     }
 
     /**

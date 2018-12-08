@@ -3,8 +3,10 @@ package seedu.address.model;
 import java.nio.file.Path;
 import java.util.function.Predicate;
 
+import javafx.beans.property.ReadOnlyProperty;
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
+import seedu.address.commons.core.index.Index;
 import seedu.address.model.person.Person;
 
 /**
@@ -109,4 +111,21 @@ public interface Model {
      * Saves the current address book state for undo/redo.
      */
     void commitAddressBook();
+
+    /**
+     * Index of the currently selected person in the filtered person list.
+     * null if no person is selected.
+     */
+    ReadOnlyProperty<Index> selectedPersonIndexProperty();
+
+    /**
+     * Returns the Index of the currently selected person in the filtered person list.
+     * null if no person is selected.
+     */
+    Index getSelectedPersonIndex();
+
+    /**
+     * Sets the selected person index.
+     */
+    void setSelectedPersonIndex(Index index);
 }

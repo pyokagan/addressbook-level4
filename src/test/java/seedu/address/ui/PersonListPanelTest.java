@@ -3,7 +3,6 @@ package seedu.address.ui;
 import static java.time.Duration.ofMillis;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
-import static seedu.address.testutil.EventsUtil.postNow;
 import static seedu.address.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.address.testutil.TypicalPersons.getTypicalPersons;
 import static seedu.address.ui.testutil.GuiTestAssert.assertCardDisplaysPerson;
@@ -15,9 +14,10 @@ import org.junit.Test;
 
 import guitests.guihandles.PersonCardHandle;
 import guitests.guihandles.PersonListPanelHandle;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import seedu.address.commons.events.ui.JumpToListRequestEvent;
+import seedu.address.commons.core.index.Index;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
@@ -28,10 +28,9 @@ public class PersonListPanelTest extends GuiUnitTest {
     private static final ObservableList<Person> TYPICAL_PERSONS =
             FXCollections.observableList(getTypicalPersons());
 
-    private static final JumpToListRequestEvent JUMP_TO_SECOND_EVENT = new JumpToListRequestEvent(INDEX_SECOND_PERSON);
-
     private static final long CARD_CREATION_AND_DELETION_TIMEOUT = 2500;
 
+    private final SimpleObjectProperty<Index> selectedPersonIndex = new SimpleObjectProperty<Index>();
     private PersonListPanelHandle personListPanelHandle;
 
     @Test
@@ -51,7 +50,7 @@ public class PersonListPanelTest extends GuiUnitTest {
     @Test
     public void handleJumpToListRequestEvent() {
         initUi(TYPICAL_PERSONS);
-        postNow(JUMP_TO_SECOND_EVENT);
+        guiRobot.interact(() -> selectedPersonIndex.set(INDEX_SECOND_PERSON));
         guiRobot.pauseForHuman();
 
         PersonCardHandle expectedPerson = personListPanelHandle.getPersonCardHandle(INDEX_SECOND_PERSON.getZeroBased());
@@ -95,7 +94,8 @@ public class PersonListPanelTest extends GuiUnitTest {
      * Also shows the {@code Stage} that displays only {@code PersonListPanel}.
      */
     private void initUi(ObservableList<Person> backingList) {
-        PersonListPanel personListPanel = new PersonListPanel(backingList);
+        PersonListPanel personListPanel =
+                new PersonListPanel(backingList, selectedPersonIndex, selectedPersonIndex::set);
         uiPartRule.setUiPart(personListPanel);
 
         personListPanelHandle = new PersonListPanelHandle(getChildNode(personListPanel.getRoot(),

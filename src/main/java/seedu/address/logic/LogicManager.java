@@ -6,10 +6,12 @@ import java.util.logging.Logger;
 
 import com.google.common.eventbus.Subscribe;
 
+import javafx.beans.property.ReadOnlyProperty;
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.ComponentManager;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.commons.core.index.Index;
 import seedu.address.commons.events.model.AddressBookChangedEvent;
 import seedu.address.logic.commands.Command;
 import seedu.address.logic.commands.CommandResult;
@@ -95,6 +97,16 @@ public class LogicManager extends ComponentManager implements Logic {
     @Override
     public void setGuiSettings(GuiSettings guiSettings) {
         model.setGuiSettings(guiSettings);
+    }
+
+    @Override
+    public ReadOnlyProperty<Index> selectedPersonIndexProperty() {
+        return model.selectedPersonIndexProperty();
+    }
+
+    @Override
+    public void setSelectedPersonIndex(Index index) {
+        model.setSelectedPersonIndex(index);
     }
 
     @Subscribe
