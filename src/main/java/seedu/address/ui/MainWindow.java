@@ -131,6 +131,7 @@ public class MainWindow extends UiPart<Stage> {
 
         commandBox = new CommandBox(logic);
         commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
+        resultDisplay.uiCommandResultProperty().bind(commandBox.uiCommandResultProperty());
     }
 
     void hide() {
