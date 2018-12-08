@@ -10,7 +10,12 @@ public interface Ui {
     /** Starts the UI (and the App).  */
     void start(Stage primaryStage);
 
-    /** Stops the UI. */
-    void stop();
+    /**
+     * Hides the UI.
+     * This may trigger JavaFX to shutdown if the {@code implicitExit} attribute is set.
+     *
+     * @see javafx.application.Platform#setImplicitExit(boolean)
+     */
+    void hide();
 
 }

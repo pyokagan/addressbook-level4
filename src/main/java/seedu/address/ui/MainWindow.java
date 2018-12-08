@@ -131,6 +131,7 @@ public class MainWindow extends UiPart<Stage> {
     }
 
     void hide() {
+        helpWindow.hide();
         primaryStage.hide();
     }
 

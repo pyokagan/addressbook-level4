@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 import com.google.common.eventbus.Subscribe;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.stage.Stage;
 import seedu.address.commons.core.Config;
 import seedu.address.commons.core.EventsCenter;
@@ -185,20 +184,18 @@ public class MainApp extends Application {
     @Override
     public void stop() {
         logger.info("============================ [ Stopping Address Book ] =============================");
-        ui.stop();
+        ui.hide();
         try {
             storage.saveUserPrefs(model.getUserPrefs());
         } catch (IOException e) {
             logger.severe("Failed to save preferences " + StringUtil.getDetails(e));
         }
-        Platform.exit();
-        System.exit(0);
     }
 
     @Subscribe
     public void handleExitAppRequestEvent(ExitAppRequestEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
-        stop();
+        ui.hide();
     }
 
     public static void main(String[] args) {

@@ -50,7 +50,7 @@ public class UiManager extends ComponentManager implements Ui {
     }
 
     @Override
-    public void stop() {
+    public void hide() {
         logic.setGuiSettings(mainWindow.getCurrentGuiSetting());
         mainWindow.hide();
     }
