@@ -7,7 +7,7 @@ install:
   - ./config/travis/run-checks.sh
   - ./gradlew assemble asciidoctor
 
-script: ./gradlew headless check coverage coveralls
+script: ./gradlew headless check coveralls
 
 deploy:
   skip_cleanup: true
