@@ -3,9 +3,11 @@ matrix:
   include:
     - jdk: oraclejdk9
 
-script: >-
-    ./config/travis/run-checks.sh &&
-    ./gradlew clean checkstyleMain checkstyleTest headless allTests coverage coveralls asciidoctor
+install:
+  - ./config/travis/run-checks.sh
+  - ./gradlew assemble
+
+script: ./gradlew clean checkstyleMain checkstyleTest headless allTests coverage coveralls asciidoctor
 
 deploy:
   skip_cleanup: true
