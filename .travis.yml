@@ -5,9 +5,9 @@ matrix:
 
 install:
   - ./config/travis/run-checks.sh
-  - ./gradlew assemble
+  - ./gradlew assemble asciidoctor
 
-script: ./gradlew checkstyleMain checkstyleTest headless allTests coverage coveralls asciidoctor
+script: ./gradlew checkstyleMain checkstyleTest headless allTests coverage coveralls
 
 deploy:
   skip_cleanup: true
