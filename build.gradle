@@ -237,6 +237,8 @@ task deployOfflineDocs(type: Copy) {
     }
 }
 
+System.setProperty("plantuml.include.path", file("docs/diagrams").toString())
+
 plantUml {
     render input: 'docs/diagrams/*.puml', output: 'docs/images', format: 'png'
     render input: 'docs/diagrams/plantuml/*.puml', output: 'docs/images/plantuml', format: 'png'
