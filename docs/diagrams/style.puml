@@ -61,6 +61,7 @@ skinparam Participant {
     Padding 20
 }
 
+skinparam defaultFontName Arial
 skinparam MinClassWidth 50
 skinparam ParticipantPadding 10
 skinparam Shadowing false
